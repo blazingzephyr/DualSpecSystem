@@ -401,3 +401,4 @@ FodyWeavers.xsd
 *.lnk
 BuildCache/
 *.XCOM_suo
+.vscode/settings.json
