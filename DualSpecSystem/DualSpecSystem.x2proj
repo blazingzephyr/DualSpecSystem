@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Default" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Guid>4250a625-4c46-4185-a6aa-3bf515200277</Guid>
+    <Name>DualSpecSystem</Name>
+    <Description>An RPGO-esque class framework.</Description>
+    <SteamPublishID>0</SteamPublishID>
+    <AssemblyName>DualSpecSystem</AssemblyName>
+    <RootNamespace>DualSpecSystem</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="Config\" />
+    <Folder Include="Localization\" />
+    <Folder Include="Src\" />
+    <Folder Include="Src\DualSpecSystem\" />
+    <Folder Include="Src\DualSpecSystem\Classes\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ReadMe.txt" />
+    <Content Include="ModPreview.jpg" />
+    <Content Include="Config\XComEditor.ini" />
+    <Content Include="Config\XComEngine.ini" />
+    <Content Include="Config\XComGame.ini" />
+    <Content Include="Localization\XComGame.int" />
+    <Content Include="Src\DualSpecSystem\Classes\X2DownloadableContentInfo_DualSpecSystem.uc" />
+  </ItemGroup>
+  <Import Project="$(MSBuildLocalExtensionPath)\XCOM2.targets" />
+</Project>
