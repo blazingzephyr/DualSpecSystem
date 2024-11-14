@@ -1,45 +1,38 @@
 
 class X2SpecializationUtilities extends Object config(DualSpecSystem);
 
-/*
- *
- */
-static function XComGameState_Unit_TrainingState GetOrInitSpecializations(XComGameState_Unit Unit)
+static function XComGameState_Unit_TrainingState InitSpecsFor(XComGameState_Unit Unit, optional XcomGameState NextState = none)
 {
-    local XComGameState_BaseObject Component;
-    local XComGameStateHistory History;
+    local XComGameState_Unit_TrainingState TrainingState;
+    local X2GameRuleset GameRules;
 
-    if (Unit != none)
-    {
-        History = `XCOMHISTORY;
-        Component = Unit.FindComponentObject(class'XComGameState_Unit_TrainingState');
-        if (Component == none)
-        {
-            return InitSpecializations(Unit);
-        }
+    `log('Inializing train data for' @ Unit.GetFullName(),, 'Dual Specialization System');
 
-        return XComGameState_Unit_TrainingState(Component);
-    }
-    
-    return none;
-}
+    if (Unit == none) return none;
+    if (NextState == none) NextState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("X2_DSC_Init");
 
-/*
- *
- */
-static function XComGameState_Unit_TrainingState InitSpecializations(XComGameState_Unit Unit)
-{
-    local XComGameState                     NewState;
-    local XComGameState_Unit_TrainingState  TrainingState;
-    local X2GameRuleset                     GameRules;
-
-	`LOG("Creating specializations component for " $ Unit.GetFullName(),, 'Liberators Specialization System');
-    NewState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Attempting to initialize specializations...");
-    TrainingState = XComGameState_Unit_TrainingState(NewState.CreateNewStateObject(class'XComGameState_Unit_TrainingState'));
-    TrainingState.Initialize(Unit);
+    TrainingState = XComGameState_Unit_TrainingState(NextState.CreateNewStateObject(class'XComGameState_Unit_TrainingState'));
+    TrainingState.TrainState = eTrainingState_Rookie;
+    Unit.AddComponentObject(TrainingState);
 
     GameRules = `GAMERULES;
-    GameRules.SubmitGameState(NewState);
+    GameRules.SubmitGameState(NextState);
 
     return TrainingState;
+}
+
+static function bool IsUnitTraining(XComGameState_Unit Unit)
+{
+    local XComGameState_Unit_TrainingState TrainState;
+
+    if (Unit == none) return false;
+    
+    TrainState = XComGameState_Unit_TrainingState(Unit.FindComponentObject(class'XComGameState_Unit_TrainingState'));
+    if (TrainState == none) TrainState = InitSpecsFor(Unit);
+    if (TrainState.TrainState == eTrainingState_Rookie && Unit.GetRank() == 0 && Unit.CanRankUpSoldier())
+    {
+        TrainState.TrainState = eTrainingState_Ready;
+    }
+
+    return TrainState.TrainState == eTrainingState_Ready;
 }

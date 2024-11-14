@@ -11,40 +11,25 @@ class X2DownloadableContentInfo_DualSpecSystem extends X2DownloadableContentInfo
 
 var config array<name> RemoveGuerillaUpgrades;  /* Guerilla Tactics School class upgrades to remove. */
 
-
-/// <summary>
-/// Called when the player starts a new campaign while this DLC / Mod is installed
-/// </summary>
+/*
+ * Called when the player starts a new campaign while this DLC / Mod is installed
+ */
 static event InstallNewCampaign(XComGameState StartState)
-{	
-	ModifyAllSoldiersInBarracks(StartState);
-}
-
-static function ModifyAllSoldiersInBarracks(XComGameState StartState)
 {
 	local XComGameStateHistory History;
 	local XComGameState_HeadquartersXCom XComHQ;
 	local array<XComGameState_Unit> Soldiers;
 	local XComGameState_Unit UnitState;
-	local XComGameState_Unit_TrainingState TrainingState;
-
-    local XComGameState_BaseObject B;
+    local X2GameRuleset GameRules;
 
 	History = `XCOMHISTORY;
-
 	XComHQ = XComGameState_HeadquartersXCom(History.GetSingleGameStateObjectForClass(class'XComGameState_HeadquartersXCom'));
-
 	Soldiers = XComHQ.GetSoldiers();
+    GameRules = `GAMERULES;
 
 	foreach Soldiers(UnitState)
 	{
-        `LOG("[A] Creating specializations component for " $ UnitState.GetFullName(),, 'Liberators Specialization System');
-        // Buggy
-        TrainingState = XComGameState_Unit_TrainingState(StartState.CreateNewStateObject(class'XComGameState_Unit_TrainingState'));
-        TrainingState.Initialize(UnitState);
-
-        StartState.AddStateObject(UnitState);
-        StartState.AddStateObject(TrainingState);
+	    class'X2SpecializationUtilities'.static.InitSpecsFor(UnitState, StartState);
 	}
 }
 

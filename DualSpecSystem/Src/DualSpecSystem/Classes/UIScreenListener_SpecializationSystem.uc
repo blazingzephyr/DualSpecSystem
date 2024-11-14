@@ -25,7 +25,7 @@ event OnInit(UIScreen Screen)
     local UIArmory_MainMenu ArmoryScreen;
     local UIAfterAction PostMissionScreen;
     local UIPanel BG;
-	local XComGameState_Unit_TrainingState TrainingState;
+	local bool TrainingState;
     
     ArmoryScreen = UIArmory_MainMenu(Screen);
     PostMissionScreen = UIAfterAction(Screen);
@@ -38,26 +38,32 @@ event OnInit(UIScreen Screen)
 		ParentScreen = UIArmory_MainMenu(Screen);
         Unit = XComGameState_Unit(History.GetGameStateForObjectID(ArmoryScreen.UnitReference.ObjectID));
 
-		// Update mousewheel control to enable the list scrolling.
-        if (ParentScreen != none)
-        {
-            BG = ParentScreen.Spawn(class'UIPanel', ParentScreen).InitPanel('armoryMenuBG');
-            BG.bShouldPlayGenericUIAudioEvents = false;
+		if (Unit != none)
+		{
+			// Update mousewheel control to enable the list scrolling.
+			if (ParentScreen != none)
+			{
+				BG = ParentScreen.Spawn(class'UIPanel', ParentScreen).InitPanel('armoryMenuBG');
+				BG.bShouldPlayGenericUIAudioEvents = false;
 
-            // Hook mousewheel to scroll MainMenu list instead of rotating the soldier.
-            BG.ProcessMouseEvents(ParentScreen.List.OnChildMouseEvent);
-        }
+				// Hook mousewheel to scroll MainMenu list instead of rotating the soldier.
+				BG.ProcessMouseEvents(ParentScreen.List.OnChildMouseEvent);
+			}
 
-        // If the Rookie is ready to be promoted, create the 'Train Soldier' button.
-		TrainingState = class'X2SpecializationUtilities'.static.GetOrInitSpecializations(Unit);
-        if (TrainingState.IsUnitTraining())
-        {
-			NextOnSelectionChanged = ArmoryScreen.List.OnSelectionChanged;
-			ArmoryScreen.List.OnSelectionChanged = OnSelectionChanged;
+			// If the Rookie is ready to be promoted, create the 'Train Soldier' button.
 
-            // ArmoryScreen.List.OnSelectionChanged = OnSelectionChanged;
-            Remove(ArmoryScreen);
-        }
+			TrainingState = class'X2SpecializationUtilities'.static.IsUnitTraining(Unit);
+			`log("[Called at OnInit in UIScreenListener_SpecializationSystem.uc]" @ Unit.GetFullName());
+
+			if (TrainingState)
+			{
+				NextOnSelectionChanged = ArmoryScreen.List.OnSelectionChanged;
+				ArmoryScreen.List.OnSelectionChanged = OnSelectionChanged;
+
+				// ArmoryScreen.List.OnSelectionChanged = OnSelectionChanged;
+				Remove(ArmoryScreen);
+			}
+		}
     }
 
     // Check whether the player is currently on the post-mission promotion screen with the soldiers walking out of the Skyranger.
@@ -115,7 +121,7 @@ event OnReceiveFocus(UIScreen Screen)
 {    local UIArmory_MainMenu ArmoryScreen;
     local UIAfterAction PostMissionScreen;
     local UIPanel BG;
-	local XComGameState_Unit_TrainingState TrainingState;
+	local bool TrainingState;
 
 	local XComGameState_Unit Unit;
 	local XComGameStateHistory History;
@@ -131,17 +137,13 @@ event OnReceiveFocus(UIScreen Screen)
         // Add a reference to the viewed soldier.
         Unit = XComGameState_Unit(History.GetGameStateForObjectID(ParentScreen.UnitReference.ObjectID));
 
-		if (Unit != none)
+		TrainingState = class'X2SpecializationUtilities'.static.IsUnitTraining(Unit);
+		if (TrainingState)
 		{
-			TrainingState = class'X2SpecializationUtilities'.static.GetOrInitSpecializations(Unit);
-			if (TrainingState.IsUnitTraining())
-			{
-				// ArmoryScreen.List.OnSelectionChanged = OnSelectionChanged;
-				Remove(ArmoryScreen);
-			}
+			`log("[Called at OnReceiveFocus in UIScreenListener_SpecializationSystem.uc]");
+			// ArmoryScreen.List.OnSelectionChanged = OnSelectionChanged;
+			Remove(ArmoryScreen);
 		}
-
-        // If the Rookie is ready to be promoted, create the 'Train Soldier' button.
     }
 
     // Check whether the player is currently on the post-mission promotion screen with the soldiers walking out of the Skyranger.\
@@ -181,6 +183,7 @@ simulated function Remove(UIArmory_MainMenu Screen)
 	local UIListItemString Promotebutton;
 	local int Promotebuttonindex;
 
+	`log("[Called at Remove in UIScreenListener_SpecializationSystem.uc]");
 	FindPromoteListItem(Screen.List, Promotebuttonindex, Promotebutton);
 	//Screen.List.MoveItemToBottom(Promotebutton);
 

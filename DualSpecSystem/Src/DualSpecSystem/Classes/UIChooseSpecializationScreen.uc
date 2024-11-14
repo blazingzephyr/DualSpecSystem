@@ -6,11 +6,11 @@ var XComGameState_Unit Unit;
 
 simulated function InitScreen(XComPlayerController InitController, UIMovie InitMovie, optional name InitName)
 {
-    local XComGameState_Unit_TrainingState State;
+    //local XComGameState_Unit_TrainingState TrState;
 
 	super.InitScreen(InitController, InitMovie, InitName);
     
-    State = class'X2SpecializationUtilities'.static.GetOrInitSpecializations(Unit);
-    State.TrainState = TrainingState_Finished;
+    //TrState = class'X2SpecializationUtilities'.static.GetOrInitSpecializations(Unit);
+    //TrState.TrainState = TrainingState_Finished;
     //Unit.Status.
 }
