@@ -1,16 +1,21 @@
+//----------------------------------------------------------------------------------------
+//  *********   DUAL SPEC SYSTEM SOURCE CODE   *********
+//  FILE:    UIChooseSpecializationScreen.uc
+//  AUTHOR:  blazingzephyr
+//
+//  PURPOSE: The classes commodity screen. Implements classes selection logic.
+//
+//----------------------------------------------------------------------------------------
+class UIChooseSpecializationScreen extends UISimpleCommodityScreen config(DualSpecSystem);
 
-class UIChooseSpecializationScreen extends UIInventory config(SpecializationSystem);
+var UIScreen            	ParentScreen;	/* Screen which this was called from. */
+var StateObjectReference	UnitReference;	/* Object reference to the promoted unit. */
 
-var UIArmory_MainMenu ParentScreen;
-var XComGameState_Unit Unit;
-
-simulated function InitScreen(XComPlayerController InitController, UIMovie InitMovie, optional name InitName)
+defaultproperties
 {
-    //local XComGameState_Unit_TrainingState TrState;
-
-	super.InitScreen(InitController, InitMovie, InitName);
-    
-    //TrState = class'X2SpecializationUtilities'.static.GetOrInitSpecializations(Unit);
-    //TrState.TrainState = TrainingState_Finished;
-    //Unit.Status.
+	DisplayTag="UIBlueprint_Promotion"
+	CameraTag="UIBlueprint_Promotion"
+	InputState = eInputState_Consume;
+	bHideOnLoseFocus = true;
+	bConsumeMouseEvents = true;
 }

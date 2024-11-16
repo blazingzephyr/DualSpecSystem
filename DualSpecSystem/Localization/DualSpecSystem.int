@@ -1,0 +1,4 @@
+[UIScreenListener_SoldierTraining]
+strTrainSoldier="ASSIGN SPECIALIZATIONS"
+strTrainSoldierTooltip="ASSIGN AVAILABLE WEAPONS AND COMBAT ROLES OF CHOICE."
+strTrainSoldierDescription="Train the soldier to be able to promote them."
