@@ -1,0 +1,4 @@
+[UIScreenListener_SoldierTraining]
+strTrainSoldier="НАЗНАЧИТЬ СПЕЦИАЛИЗАЦИИ"
+strTrainSoldierTooltip="НАЗНАЧИТЬ ДОСТУПНЫЕ ВИДЫ ОРУЖИЯ И БОЕВЫЕ РОЛИ ПО ВЫБОРУ."
+strTrainSoldierDescription="Проведите тренировку солдата чтобы повысить его в звании."
